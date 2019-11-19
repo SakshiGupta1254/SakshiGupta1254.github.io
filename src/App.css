@@ -49,4 +49,7 @@ a {
 #calendar{
   display:none;
 }
+div[id|=calendar] {
+  display:none;
+}
 td:nth-child(even){background-color: #f2f2f242}

@@ -25,14 +25,30 @@ data:[]
 }
 handleStateChange(value,id){
   if(value.getTime()< new Date().getTime()){
-  var date= this.state.UpComing.data.filter(c=> c.id == id);
-  this.state.UpComing.data.pop(date);
+    const upComingData = this.state.UpComing.data.filter(c => c.id != id);    
+    let filteredObj = this.state.UpComing.data.filter(c => c.id == id);
+    filteredObj[0].createdOn=value.getTime();
+    const pastData = [...this.state.past.data, ...filteredObj];
+    this.setState({
+      UpComing: Object.assign({},this.state.UpComing,{data:upComingData}),
+      past:  Object.assign({},this.state.past,{data:pastData})
+    });
  // this.state.past.data.push(date);
+} else {
+      const upComingData = this.state.UpComing.data.map((c) => {
+        if(c.id == id){
+          c.createdOn = value.getTime();
+        }
+        return c;
+      });
+    this.setState({
+      UpComing: Object.assign({},this.state.UpComing,{data:upComingData})
+    });      
 }
 console.log(this.state.UpComing.data);
 }
 componentDidMount(){
-let liveEvent=[]; let pastEvent=[];let Upcoming=[];
+let liveEvent=[]; let pastEvent=[];let Upcoming=[]; 
 customData.data.map((data) =>{ if(data.createdOn > new Date().getTime()){Upcoming.push(data);}
 else if(data.createdOn < new Date().getTime()){pastEvent.push(data);}
 else{liveEvent.push(data);}
@@ -66,7 +82,14 @@ past:  Object.assign({},this.state.past,{showPastData:true})
 }
 render()
 {console.log(this.state.UpComing);console.log(this.state.past);
-  
+let campaignData = [];
+if(this.state.UpComing.showUpcomingData) {
+  campaignData = this.state.UpComing.data;
+} else if(this.state.past.showPastData) {
+  campaignData = this.state.past.data;
+} else {
+  campaignData = this.state.live.data;
+}
   return (
 
 <div>
@@ -78,21 +101,7 @@ render()
             <a onClick={this.liveClicked}>Live Campaigns</a>
             <a onClick={this.pastClicked}>Past Campaigns</a>
          </div>
-         <div>
-            {this.state.UpComing.showUpcomingData && (this.state.UpComing.data.map(data =>
-            <Table name={data.name} key={data.id} id={data.id} handleStateChange = {this.handleStateChange} price={data.price} date={data.createdOn}/>
-            ))}
-         </div>
-         <div>
-            {this.state.past.showPastData && (this.state.past.data.map(data =>
-            <Table name={data.name} key={data.id} id={data.id} price={data.price} date={data.createdOn}/>
-            ))}
-         </div>
-         <div>
-            {this.state.live.showLiveData && (this.state.live.data.map(data =>
-            <Table name={data.name} key={data.id} id={data.id} price={data.price} date={data.createdOn}/>
-            ))}
-         </div>
+          <Table data={campaignData} handleStateChange = {this.handleStateChange}/>
       </div>
    </React.Fragment>
    }

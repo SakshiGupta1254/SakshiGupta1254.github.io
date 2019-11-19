@@ -16,9 +16,9 @@ state = {
 callCalendar:false,
 showPrice:false
 }
-handleDate=() => {
+handleDate=(id) => {
 
-document.getElementById('calendar').style.display="block";
+document.getElementById(id).style.display="block";
 
 }
 displayDate=(date)=>{
@@ -36,9 +36,12 @@ frame=" Days Ago";
 var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);       
 return `${event.toLocaleDateString('en-EN', options)} ${parseInt(Difference_In_Days)}  ${frame}`;
 }
-handleCalendar(date)  {
-this.props.handleStateChange(date,this.props.id);
-document.getElementById('calendar').style.display="none";
+handleCalendar(e, id, itemId)  {
+if(e < new Date()){
+    alert("you have entered Past Value");
+}
+else this.props.handleStateChange(e,itemId);
+document.getElementById(id).style.display="none";
 
 }
 openPopup=() => {
@@ -46,7 +49,8 @@ this.setState({
 showPrice: !this.state.showPrice,
 });
 }
-render() { 
+render() {
+  const {data} = this.props; 
 return ( 
 <div>
    <table>
@@ -59,23 +63,27 @@ return (
          </tr>
       </thead>
       <tbody>
-         <tr>
-            <td>{this.displayDate(this.props.date)}</td>
-            <td><img src={first} />{this.props.name}</td>
+      {
+        data.map((item, index) => {
+         return <tr key={index}>
+            <td>{this.displayDate(item.createdOn)}</td>
+            <td><img src={first} />{item.name}</td>
             <td onClick={this.openPopup}>
                <img src={Priceimg}/>{this.state.showPrice &&
-               <Price value={this.props.price}/>}
+               <Price value={item.price}/>}
             </td>
             <td><img src={file} />CSV</td>
             <td><img src={stat} />Report</td>
-            <td onClick={this.handleDate}><img src={calendar}/>
+            <td onClick={(e)=> this.handleDate(`calendar-${index}`)}><img src={calendar}/>
                 Schedule Again
+                <div id={`calendar-${index}`}><Calendar onChange={(e)=>
+                  this.handleCalendar(e, `calendar-${index}`, item.id)} value={new Date(item.createdOn)}/></div>
             </td>
          </tr>
+       })
+      }
       </tbody>
       </table>
-      <div id="calendar"><Calendar onChange={(e)=>
-    this.handleCalendar(e)} value={new Date(this.props.date)}/></div>
 </div>
 );
 }
