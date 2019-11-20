@@ -90,13 +90,9 @@ if(this.state.UpComing.showUpcomingData) {
 } else {
   campaignData = this.state.live.data;
 }
-  return (
-
-<div>
-   {
-   <React.Fragment>
-      <div class="mainpage">
-         <div class="tabs">
+  return (<React.Fragment>
+      <div className="mainpage">
+         <div className="tabs">
             <a onClick={this.upcomingClicked}>Upcoming Campaigns</a>
             <a onClick={this.liveClicked}>Live Campaigns</a>
             <a onClick={this.pastClicked}>Past Campaigns</a>
@@ -104,9 +100,7 @@ if(this.state.UpComing.showUpcomingData) {
           <Table data={campaignData} handleStateChange = {this.handleStateChange}/>
       </div>
    </React.Fragment>
-   }
-</div>
-)
+);
 }
 }
 export default App;

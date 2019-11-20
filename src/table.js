@@ -37,6 +37,7 @@ var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 return `${event.toLocaleDateString('en-EN', options)} ${parseInt(Difference_In_Days)}  ${frame}`;
 }
 handleCalendar(e, id, itemId)  {
+
 if(e < new Date()){
     alert("you have entered Past Value");
 }
