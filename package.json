@@ -2,6 +2,7 @@
   "name": "blue-stack",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://sakshigupta1254.github.io",
   "dependencies": {
     "react": "^16.12.0",
     "react-calendar": "^2.19.2",
